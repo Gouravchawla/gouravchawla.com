@@ -4,18 +4,29 @@
 	<meta charset="UTF-8">
 	<title>Gourav Chawla - Software Developer | Learner | Pythonista</title>
 	<link rel="stylesheet" type="text/css" href="assets/css/style.css" />
-	<script type="text/javascript" src="http://cdnjs.cloudflare.com/ajax/libs/jquery/2.1.1/jquery.js"></script>
+	<link rel="stylesheet" type="text/css" href="https://fonts.googleapis.com/css?family=Campton">
+	<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.1.1/jquery.js"></script>
 </head>
 <body>
-	<header></header>
-	<section id="Intro">
+	<section id="intro">
+		<div id="mugshot">
+			<img src="assets/img/mugshot.jpg" alt="Gourav Chawla's Mugshot"/>
+		</div>
 		<div class="head-text">
 			<h1 class="tagline">I'm 
 				<span id="typed"></span>
 			</h1>
 			<h4 class="sub-tagline">&lt;&nbsp;Software Developer | Learner | Pythonista&nbsp;/&gt;</h4>
 		</div>
+		
 	</section>
+	<footer>
+		<p>
+			Copyright <span id="copyright-year"></span>. 
+			<a href="https://www.gouravchawla.com">Gourav Chawla</a> | 
+			<a href="https://madewithlove.org.in" target="_blank">Made with <span style="color: #e74c3c">&hearts;</span> in India</a>
+		</p>
+	</footer>
 	<!-- Scripts -->
 	<script type="text/javascript" src="assets/js/typed.js"></script>
 	<!-- Event Listner for typing script -->
@@ -31,6 +42,8 @@
     function lift(){
         $(".head-text").addClass("lift-text");
     }
+
+	$('#copyright-year').html(new Date().getFullYear());
 	</script>
 </body>
 </html>

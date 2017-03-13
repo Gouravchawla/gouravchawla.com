@@ -1,10 +1,23 @@
 body{
-	background-color: #ccc;
+	margin: 0;
+	padding: 0;
+	background-image: url('../img/particle.png');
+	background-size: cover;
+	display: flex;
+    min-height: 100vh;
+    flex-direction: column;
 }
 
-section{
-	color:white;
+#intro{
+	flex: 1;
 	text-align:center;
+}
+
+#mugshot img{
+	padding:10px 0px;
+	width: 150px;
+	height: 150px;
+	border-radius: 100%;
 }
 
 .typed-cursor{
@@ -13,6 +26,7 @@ section{
     -moz-animation: blink 0.7s infinite;
     animation: blink 0.7s infinite;
 }
+
 @keyframes blink{
     0% { opacity:1; }
     50% { opacity:0; }
@@ -30,11 +44,11 @@ section{
 }
 
 .head-text {
-    padding: 80px 0 0 0;
+    padding: 10px 0 0 0;
     min-height: 215px;
-    color: #fff;
+    color: #505470;
     font-size: 2em;
-    text-shadow: #000 0px 2px 4px;
+    font-family: campton ,sans-serif;
     text-align: center;
 }
 
@@ -68,4 +82,12 @@ section{
 
 .lift-text .sub-tagline{
 	opacity: 1;
+}
+
+footer{
+	text-align: center;
+}
+
+footer a{
+	text-decoration: none;
 }
