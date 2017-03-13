@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>Gourav Chawla - Software Developer | Learner | Pythonista</title>
+	<link rel="stylesheet" type="text/css" href="assets/css/style.css" />
+	<script type="text/javascript" src="http://cdnjs.cloudflare.com/ajax/libs/jquery/2.1.1/jquery.js"></script>
+</head>
+<body>
+	<header></header>
+	<section id="Intro">
+		<div class="head-text">
+			<h1 class="tagline">I'm 
+				<span id="typed"></span>
+			</h1>
+			<h4 class="sub-tagline">&lt;&nbsp;Software Developer | Learner | Pythonista&nbsp;/&gt;</h4>
+		</div>
+	</section>
+	<!-- Scripts -->
+	<script type="text/javascript" src="assets/js/typed.js"></script>
+	<!-- Event Listner for typing script -->
+	<script>
+	  
+    $("#typed").typed({
+        strings: ["a Software Developer.", "a Learner.", "Gourav Chawla."],
+        typeSpeed: 30,
+        callback: function(){
+            lift();
+        }
+    });
+    function lift(){
+        $(".head-text").addClass("lift-text");
+    }
+	</script>
+</body>
+</html>
