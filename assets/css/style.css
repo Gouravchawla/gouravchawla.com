@@ -1,4 +1,4 @@
-body{
+/*body{
 	margin: 0;
 	padding: 0;
 	background-image: url('../img/particle.png');
@@ -18,6 +18,105 @@ body{
 	width: 150px;
 	height: 150px;
 	border-radius: 100%;
+}*/
+/*
+html{
+    border: dashed 12px red;
+}
+
+head{
+    border: dotted 10px blue;
+}
+
+body{
+    border:solid 4px pink;
+}*/
+#intro{
+    position: relative;
+    padding: 0;
+    /*background-image: url('../img/particle.png');*/
+    /*background-size: cover;*/
+    height:100vh;
+    font-family: 'Inconsolata', sans-serif;
+    /*display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;*/
+}
+
+#intro .row{
+    margin: 0; 
+    position: relative;
+}
+
+#mugshot img{
+    display: block;
+    width: 150px;
+    padding:10px 0px;
+    border-radius: 100%;
+    margin: 0 auto; 
+}
+
+
+footer{
+    background-color: #fff;
+    color: #18677a;
+    padding: 5px 0;
+    margin: 0 0;
+}
+
+footer a{
+    color: #18677a;
+}
+
+#particles-js {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  /*background-color: #b61924;*/
+  background-image: url("http://mc3.com.au/wp-content/themes/mc3/images/section-1-bg.jpg");
+  background-repeat: no-repeat;
+  background-size: cover;
+  background-position: 50% 50%;
+}
+
+
+/* ---- stats.js ---- */
+
+.count-particles {
+  background: #000022;
+  position: absolute;
+  top: 48px;
+  left: 0;
+  width: 80px;
+  color: #13E8E9;
+  font-size: .8em;
+  text-align: left;
+  text-indent: 4px;
+  line-height: 14px;
+  padding-bottom: 2px;
+  font-family: Helvetica, Arial, sans-serif;
+  font-weight: bold;
+}
+
+.js-count-particles {
+  font-size: 1.1em;
+}
+
+#stats,
+.count-particles {
+  -webkit-user-select: none;
+  margin-top: 5px;
+  margin-left: 5px;
+}
+
+#stats {
+  border-radius: 3px 3px 0 0;
+  overflow: hidden;
+}
+
+.count-particles {
+  border-radius: 0 0 3px 3px;
 }
 
 .typed-cursor{
@@ -46,9 +145,10 @@ body{
 .head-text {
     padding: 10px 0 0 0;
     min-height: 215px;
-    color: #505470;
+    /*color: #505470;*/
+    color:#fff;
     font-size: 2em;
-    font-family: campton ,sans-serif;
+    font-family: 'Inconsolata' ,sans-serif;
     text-align: center;
 }
 
@@ -82,6 +182,29 @@ body{
 
 .lift-text .sub-tagline{
 	opacity: 1;
+}
+
+.line-through{
+    color:#ccc;
+    text-transform: uppercase;
+}
+
+.line-through:before,
+.line-through:after{
+    content:"\00a0\00a0\00a0\00a0\00a0";
+    text-decoration:line-through;
+    font-weight: bolder;
+}
+
+#social-icons{
+    padding:0; 
+}
+
+#social-icons li
+{
+    display: inline-block;
+    padding: 15px 15px 0 0;
+    text-align: center;
 }
 
 footer{
