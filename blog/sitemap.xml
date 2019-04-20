@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="https://www.sitemaps.org/schemas/sitemap/0.9">
+
+  <url>
+    <loc>https://gouravchawla.com/blog/2017/10/automating-data-scraping-outlook-imap-python.html</loc>
+    <priority>0.8</priority>
+  </url>
+
+  <url>
+    <loc>https://gouravchawla.com/blog/2017/09/pydata-delhi-2017.html</loc>
+    <priority>0.8</priority>
+  </url>
+
+  <url>
+    <loc>https://gouravchawla.com/blog/2017/04/configure-email-for-jaspersoft-report-scheduling.html</loc>
+    <priority>0.8</priority>
+  </url>
+
+  <url>
+    <loc>https://gouravchawla.com/blog/2016/11/line-joining-and-pep8-guidelines.html</loc>
+    <priority>0.8</priority>
+  </url>
+
+  <url>
+    <loc>https://gouravchawla.com/blog/2016/05/creating-virtual-enviornment-with-python3.html</loc>
+    <priority>0.8</priority>
+  </url>
+
+
+
+</urlset>

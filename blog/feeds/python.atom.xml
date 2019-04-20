@@ -1,0 +1,187 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom"><title>Tech Deviant</title><link href="https://gouravchawla.com/blog/" rel="alternate"></link><link href="https://gouravchawla.com/blog/feeds/python.atom.xml" rel="self"></link><id>https://gouravchawla.com/blog/</id><updated>2017-10-22T00:00:00+05:30</updated><entry><title>Automating the boring stuff : Data scraping from Outlook, IMAP &amp; Two Factor Authentication</title><link href="https://gouravchawla.com/blog/2017/10/automating-data-scraping-outlook-imap-python.html" rel="alternate"></link><published>2017-10-22T00:00:00+05:30</published><updated>2017-10-22T00:00:00+05:30</updated><author><name>Gourav Chawla</name></author><id>tag:gouravchawla.com,2017-10-22:blog/2017/10/automating-data-scraping-outlook-imap-python.html</id><summary type="html">&lt;h3&gt;Prerequisites:&lt;/h3&gt;
+&lt;ul&gt;
+&lt;li&gt;Python&amp;nbsp;2.x&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;The article is going to be a short summary of what I did for a friend to automate his data scraping needs. The task was to read IDs/keywords from an Excel sheet and populate data against those IDs by searching and scraping data from matched emails. Though I won&amp;#8217;t be covering all the points but I will cover the challenges I faced and the solutions to those&amp;nbsp;challenges.&lt;/p&gt;
+&lt;p&gt;The first thing that comes to mind for such a task is the &lt;a href="https://docs.python.org/2/library/imaplib.html"&gt;&lt;span class="caps"&gt;IMAP&lt;/span&gt; package&lt;/a&gt; in Python. So, I started my tmux session, fired up &lt;span class="caps"&gt;VIM&lt;/span&gt; and started working on the script. With the help of &lt;span class="caps"&gt;IMAP&lt;/span&gt; package, I was able to access the Outlook/Office 365 mailbox. Here is a small snippet for&amp;nbsp;login:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="k"&gt;def&lt;/span&gt; &lt;span class="nf"&gt;outlook_login&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;username&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;password&lt;/span&gt;&lt;span class="p"&gt;):&lt;/span&gt;
+    &lt;span class="sd"&gt;&amp;quot;&amp;quot;&amp;quot;Signs in to a mailbox using IMAP.&lt;/span&gt;
+
+&lt;span class="sd"&gt;    :param username:&lt;/span&gt;
+&lt;span class="sd"&gt;        Username of the mailbox.&lt;/span&gt;
+&lt;span class="sd"&gt;    :param password:&lt;/span&gt;
+&lt;span class="sd"&gt;        Password of the mailbox.&lt;/span&gt;
+&lt;span class="sd"&gt;    :return:&lt;/span&gt;
+&lt;span class="sd"&gt;        IMAP object on successful login else exits script.&lt;/span&gt;
+&lt;span class="sd"&gt;    &amp;quot;&amp;quot;&amp;quot;&lt;/span&gt;
+    &lt;span class="k"&gt;try&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;
+        &lt;span class="n"&gt;imap&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;imaplib&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;IMAP4_SSL&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;
+                &lt;span class="n"&gt;config&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;imap_server&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;
+                &lt;span class="n"&gt;config&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;imap_port&lt;/span&gt;
+                &lt;span class="p"&gt;)&lt;/span&gt;
+        &lt;span class="n"&gt;r&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;d&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;imap&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;login&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;username&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;password&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+        &lt;span class="k"&gt;print&lt;/span&gt; &lt;span class="n"&gt;d&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="mi"&gt;0&lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt;
+        &lt;span class="k"&gt;return&lt;/span&gt; &lt;span class="n"&gt;imap&lt;/span&gt;
+    &lt;span class="k"&gt;except&lt;/span&gt; &lt;span class="ne"&gt;Exception&lt;/span&gt; &lt;span class="k"&gt;as&lt;/span&gt; &lt;span class="n"&gt;e&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;
+        &lt;span class="k"&gt;print&lt;/span&gt; &lt;span class="n"&gt;e&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s2"&gt;&amp;quot; Aborting...&amp;quot;&lt;/span&gt;
+        &lt;span class="nb"&gt;exit&lt;/span&gt;&lt;span class="p"&gt;()&lt;/span&gt;
+
+&lt;span class="k"&gt;def&lt;/span&gt; &lt;span class="nf"&gt;main&lt;/span&gt;&lt;span class="p"&gt;():&lt;/span&gt;
+    &lt;span class="n"&gt;imap&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;outlook_login&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;gourav&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;chawla&lt;/span&gt;&lt;span class="nd"&gt;@domain.tld&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s1"&gt;&amp;#39;password&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;&lt;strong&gt;Challenge 1: Two factor&amp;nbsp;authentication&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;The script that I was creating didn&amp;#8217;t take &lt;span class="caps"&gt;2FA&lt;/span&gt; into account. Though after a bit of searching, I found out there was a simple solution to&amp;nbsp;it.&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;Solution:&lt;/strong&gt; App passwords. App password allows access to the office 365 account in client applications like Outlook, word etc. In my case, I just had to replace the account password with the App password and I was good to&amp;nbsp;go.&lt;/p&gt;
+&lt;p&gt;After the login, I quickly realized that the mailbox I had logged in was not the one I wanted to access. I wanted to access the shared mailboxes provided by Office&amp;nbsp;365.&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;Challenge 2: Sign in to a shared&amp;nbsp;mailbox&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;Solution:&lt;/strong&gt; The solution to this problem was also as easy as putting the shared mailbox email/alias after a &lt;code&gt;\&lt;/code&gt; like this: &lt;code&gt;someuser@someserver.com\alias-name&lt;/code&gt;&lt;/p&gt;
+&lt;p&gt;In my case, it was something like: &lt;code&gt;Gourav.chawla@domain.tld\shared.mailbox@domain.tld&lt;/code&gt;&lt;/p&gt;
+&lt;p&gt;Once that was taken care of and I was able to access the correct mailbox, I had to search emails by searching for a keyword in the email&amp;#8217;s subject. Here is a snippet for&amp;nbsp;searching:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="k"&gt;def&lt;/span&gt; &lt;span class="nf"&gt;main&lt;/span&gt;&lt;span class="p"&gt;():&lt;/span&gt;
+    &lt;span class="c1"&gt;# ...Code removed for brevity.&lt;/span&gt;
+    &lt;span class="c1"&gt;# Selects the Inbox for further operations&lt;/span&gt;
+    &lt;span class="k"&gt;print&lt;/span&gt; &lt;span class="s2"&gt;&amp;quot;Selected Inbox...&amp;quot;&lt;/span&gt;
+    &lt;span class="n"&gt;imap&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;select&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;Inbox&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+    &lt;span class="c1"&gt;# Search for a keyword in all the email&amp;#39;s subject&lt;/span&gt;
+    &lt;span class="n"&gt;keyword&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="s1"&gt;&amp;#39;Delivery&amp;#39;&lt;/span&gt;
+    &lt;span class="n"&gt;typ&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;data&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;imap&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;search&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;
+            &lt;span class="bp"&gt;None&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s1"&gt;&amp;#39;All&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;
+            &lt;span class="s1"&gt;&amp;#39;(SUBJECT &amp;quot;&amp;#39;&lt;/span&gt;&lt;span class="o"&gt;+&lt;/span&gt;&lt;span class="n"&gt;keyword&lt;/span&gt;&lt;span class="o"&gt;+&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;&amp;quot;)&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;The above search, if successful, returns a list of string like this: &lt;code&gt;['142 123 111']&lt;/code&gt;&lt;/p&gt;
+&lt;p&gt;Now, using these ids, I can fetch the email from the server and scrape the content I need. Here is the snippet for fetching the email and then parsing&amp;nbsp;it:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="k"&gt;def&lt;/span&gt; &lt;span class="nf"&gt;getEmail&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;imap&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="nb"&gt;id&lt;/span&gt;&lt;span class="p"&gt;):&lt;/span&gt;
+    &lt;span class="sd"&gt;&amp;quot;&amp;quot;&amp;quot;Fetches email from the server.&lt;/span&gt;
+
+&lt;span class="sd"&gt;    :param imap:&lt;/span&gt;
+&lt;span class="sd"&gt;        IMAP class instance.&lt;/span&gt;
+&lt;span class="sd"&gt;    :param id:&lt;/span&gt;
+&lt;span class="sd"&gt;        The id of the email fulfilling the search criteria.&lt;/span&gt;
+&lt;span class="sd"&gt;    :return:&lt;/span&gt;
+&lt;span class="sd"&gt;        Email message.&lt;/span&gt;
+&lt;span class="sd"&gt;    &amp;quot;&amp;quot;&amp;quot;&lt;/span&gt;
+    &lt;span class="n"&gt;r&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;d&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;imap&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;fetch&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="nb"&gt;id&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s2"&gt;&amp;quot;(RFC822)&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+    &lt;span class="n"&gt;raw_email&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;d&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="mi"&gt;0&lt;/span&gt;&lt;span class="p"&gt;][&lt;/span&gt;&lt;span class="mi"&gt;1&lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt;
+    &lt;span class="n"&gt;email_message&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;email&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;message_from_string&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;raw_email&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+    &lt;span class="k"&gt;return&lt;/span&gt; &lt;span class="n"&gt;email_message&lt;/span&gt;
+
+
+&lt;span class="k"&gt;def&lt;/span&gt; &lt;span class="nf"&gt;mailbody&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;email_message&lt;/span&gt;&lt;span class="p"&gt;):&lt;/span&gt;
+    &lt;span class="sd"&gt;&amp;quot;&amp;quot;&amp;quot;Extracts mailbody from Email message.&lt;/span&gt;
+
+&lt;span class="sd"&gt;    :param email_message:&lt;/span&gt;
+&lt;span class="sd"&gt;        Email message returned by getEmail function.&lt;/span&gt;
+&lt;span class="sd"&gt;    :return:&lt;/span&gt;
+&lt;span class="sd"&gt;        Email body.&lt;/span&gt;
+&lt;span class="sd"&gt;    &amp;quot;&amp;quot;&amp;quot;&lt;/span&gt;
+    &lt;span class="n"&gt;body&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="bp"&gt;None&lt;/span&gt;
+    &lt;span class="k"&gt;if&lt;/span&gt; &lt;span class="n"&gt;email_message&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;is_multipart&lt;/span&gt;&lt;span class="p"&gt;():&lt;/span&gt;
+        &lt;span class="k"&gt;for&lt;/span&gt; &lt;span class="n"&gt;part&lt;/span&gt; &lt;span class="ow"&gt;in&lt;/span&gt; &lt;span class="n"&gt;email_message&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;walk&lt;/span&gt;&lt;span class="p"&gt;():&lt;/span&gt;
+            &lt;span class="k"&gt;if&lt;/span&gt; &lt;span class="n"&gt;part&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;is_multipart&lt;/span&gt;&lt;span class="p"&gt;():&lt;/span&gt;
+                &lt;span class="k"&gt;for&lt;/span&gt; &lt;span class="n"&gt;subpart&lt;/span&gt; &lt;span class="ow"&gt;in&lt;/span&gt; &lt;span class="n"&gt;part&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;walk&lt;/span&gt;&lt;span class="p"&gt;():&lt;/span&gt;
+                    &lt;span class="k"&gt;if&lt;/span&gt; &lt;span class="n"&gt;subpart&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;get_content_type&lt;/span&gt;&lt;span class="p"&gt;()&lt;/span&gt; &lt;span class="o"&gt;==&lt;/span&gt; &lt;span class="s1"&gt;&amp;#39;text/html&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;
+                        &lt;span class="n"&gt;body&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;subpart&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;get_payload&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;decode&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="bp"&gt;True&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+                        &lt;span class="n"&gt;content_transfer_encoding&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;subpart&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;get&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;Content-Transfer-Encoding&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+            &lt;span class="k"&gt;elif&lt;/span&gt; &lt;span class="n"&gt;part&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;get_content_type&lt;/span&gt;&lt;span class="p"&gt;()&lt;/span&gt; &lt;span class="o"&gt;==&lt;/span&gt; &lt;span class="s1"&gt;&amp;#39;text/html&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;
+                &lt;span class="n"&gt;body&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;part&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;get_payload&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;decode&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="bp"&gt;True&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+                &lt;span class="n"&gt;content_transfer_encoding&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;part&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;get&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;Content-Transfer-Encoding&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+    &lt;span class="k"&gt;elif&lt;/span&gt; &lt;span class="n"&gt;email_message&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;get_content_type&lt;/span&gt;&lt;span class="p"&gt;()&lt;/span&gt; &lt;span class="o"&gt;==&lt;/span&gt; &lt;span class="s1"&gt;&amp;#39;text/html&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;
+        &lt;span class="n"&gt;body&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;email_message&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;get_payload&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;decode&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="bp"&gt;True&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+        &lt;span class="n"&gt;content_transfer_encoding&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;email_message&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;get&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;Content-Transfer-Encoding&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+    &lt;span class="k"&gt;else&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;
+        &lt;span class="n"&gt;body&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;email_message&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;get_payload&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;decode&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="bp"&gt;True&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+        &lt;span class="n"&gt;content_transfer_encoding&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;email_message&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;get&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;Content-Transfer-Encoding&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+    &lt;span class="k"&gt;return&lt;/span&gt; &lt;span class="n"&gt;body&lt;/span&gt;
+
+
+&lt;span class="k"&gt;def&lt;/span&gt; &lt;span class="nf"&gt;parse&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;imap&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="nb"&gt;id&lt;/span&gt;&lt;span class="p"&gt;):&lt;/span&gt;
+    &lt;span class="sd"&gt;&amp;quot;&amp;quot;&amp;quot;Fetches email from server and returns required data.&lt;/span&gt;
+
+&lt;span class="sd"&gt;    :param imap:&lt;/span&gt;
+&lt;span class="sd"&gt;        IMAP class instance.&lt;/span&gt;
+&lt;span class="sd"&gt;    :param id:&lt;/span&gt;
+&lt;span class="sd"&gt;        Id of email matched by search criteria.&lt;/span&gt;
+&lt;span class="sd"&gt;    :return:&lt;/span&gt;
+&lt;span class="sd"&gt;        Dictionary containing required data.&lt;/span&gt;
+&lt;span class="sd"&gt;    &amp;quot;&amp;quot;&amp;quot;&lt;/span&gt;
+    &lt;span class="n"&gt;result&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="p"&gt;{}&lt;/span&gt;
+    &lt;span class="n"&gt;email_message&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;getEmail&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;imap&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="nb"&gt;id&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+    &lt;span class="n"&gt;result&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;From&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;email_message&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;From&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt;
+    &lt;span class="n"&gt;result&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;To&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;email_message&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;To&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt;
+    &lt;span class="n"&gt;result&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;Date&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;parser&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;parse&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;email_message&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;Date&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;])&lt;/span&gt;
+    &lt;span class="n"&gt;result&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;Subject&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;decode_header&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;email_message&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;Subject&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;])[&lt;/span&gt;&lt;span class="mi"&gt;0&lt;/span&gt;&lt;span class="p"&gt;][&lt;/span&gt;&lt;span class="mi"&gt;0&lt;/span&gt;&lt;span class="p"&gt;])&lt;/span&gt;
+    &lt;span class="n"&gt;result&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;Body&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;mailbody&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;email_message&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+    &lt;span class="k"&gt;return&lt;/span&gt; &lt;span class="n"&gt;result&lt;/span&gt;
+
+&lt;span class="k"&gt;def&lt;/span&gt; &lt;span class="nf"&gt;main&lt;/span&gt;&lt;span class="p"&gt;():&lt;/span&gt;
+    &lt;span class="c1"&gt;# ...Code removed for brevity&lt;/span&gt;
+    &lt;span class="c1"&gt;# Sends empty string at 0th index of data if nothing is found&lt;/span&gt;
+    &lt;span class="k"&gt;if&lt;/span&gt; &lt;span class="n"&gt;data&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="mi"&gt;0&lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt; &lt;span class="o"&gt;==&lt;/span&gt; &lt;span class="s1"&gt;&amp;#39;&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;
+        &lt;span class="k"&gt;print&lt;/span&gt; &lt;span class="s2"&gt;&amp;quot;Could not find the email for keyword: &lt;/span&gt;&lt;span class="si"&gt;%s&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;&lt;/span&gt; &lt;span class="o"&gt;%&lt;/span&gt; &lt;span class="n"&gt;keyword&lt;/span&gt;
+    &lt;span class="k"&gt;else&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;
+        &lt;span class="k"&gt;for&lt;/span&gt; &lt;span class="nb"&gt;id&lt;/span&gt; &lt;span class="ow"&gt;in&lt;/span&gt; &lt;span class="n"&gt;data&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="mi"&gt;0&lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;split&lt;/span&gt;&lt;span class="p"&gt;():&lt;/span&gt;
+            &lt;span class="n"&gt;result&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;parse&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;imap&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="nb"&gt;id&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+            &lt;span class="k"&gt;print&lt;/span&gt; &lt;span class="s2"&gt;&amp;quot;&lt;/span&gt;&lt;span class="se"&gt;\n&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;result&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;To&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;],&lt;/span&gt; &lt;span class="n"&gt;result&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;Subject&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;],&lt;/span&gt; &lt;span class="s2"&gt;&amp;quot;&lt;/span&gt;&lt;span class="se"&gt;\n&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;result&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;Body&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;The above code fetches the email and stores it in a dictionary called, &amp;#8216;result&amp;#8217;. Now, whatever information you need could be stored in an excel sheet by using &lt;a href="http://openpyxl.readthedocs.io/"&gt;&amp;#8216;openpyxl&amp;#8217;&lt;/a&gt;.&lt;/p&gt;
+&lt;p&gt;In the above code, you might have noticed that I&amp;#8217;m extracting the &lt;span class="caps"&gt;HTML&lt;/span&gt; content of email body. This is because, there was a table in the body which I had to scrape. I used BeautifulSoup to do&amp;nbsp;that.&lt;/p&gt;
+&lt;p&gt;If you have any questions, feel free to ask them in the&amp;nbsp;comments.&lt;/p&gt;
+&lt;h6&gt;Reference:&lt;/h6&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href="https://github.com/awangga/outlook"&gt;https://github.com/awangga/outlook&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;</summary><category term="python"></category><category term="imap"></category><category term="outlook"></category><category term="2FA"></category><category term="shared mailbox"></category></entry><entry><title>Line joining and pep8 guidelines for maximum line length</title><link href="https://gouravchawla.com/blog/2016/11/line-joining-and-pep8-guidelines.html" rel="alternate"></link><published>2016-11-05T00:00:00+05:30</published><updated>2016-11-05T00:00:00+05:30</updated><author><name>Gourav Chawla</name></author><id>tag:gouravchawla.com,2016-11-05:blog/2016/11/line-joining-and-pep8-guidelines.html</id><summary type="html">&lt;p&gt;The motivation behind writing this article came from a piece of code that I was working on earlier this week. It was a scrapper which uses a headless browser called, &amp;#8220;PhantomJs&amp;#8221;. I had to change the user agent in my &lt;span class="caps"&gt;HTTP&lt;/span&gt; requests and I found out an example to do just that. This is the&amp;nbsp;example:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="n"&gt;dcap&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;phantomjs.page.settings.userAgent&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="p"&gt;(&lt;/span&gt;
+    &lt;span class="s2"&gt;&amp;quot;Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/53 &amp;quot;&lt;/span&gt;
+    &lt;span class="s2"&gt;&amp;quot;(KHTML, like Gecko) Chrome/15.0.87&amp;quot;&lt;/span&gt;
+&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;When i first saw the above example, I thought it was a tuple being assigned to &lt;code&gt;dcap&lt;/code&gt;. But when I took a closer look at it, I realized it was not the case. This is what I&amp;nbsp;discovered:&lt;/p&gt;
+&lt;h3&gt;Explicit vs Implicit line&amp;nbsp;joining&lt;/h3&gt;
+&lt;p&gt;In python, you can join two lines by ending that line with a, &lt;code&gt;\&lt;/code&gt;. This is the &lt;strong&gt;explicit&lt;/strong&gt; way of doing&amp;nbsp;it.&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="n"&gt;dcap&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;phantomjs.page.settings.userAgent&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;Mozilla/5.0 &amp;quot;&lt;/span&gt;\
+    &lt;span class="s2"&gt;&amp;quot;(X11; Linux x86_64) &amp;quot;&lt;/span&gt;\
+    &lt;span class="s2"&gt;&amp;quot;AppleWebKit/53 (KHTML, like Gecko) Chrome/15.0.87&amp;quot;&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;Now, if you want to do it &lt;strong&gt;implicitly&lt;/strong&gt;, you&amp;#8217;ll have to enclose the above string in parentheses, square brackets or curly&amp;nbsp;braces:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="n"&gt;dcap&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;phantomjs.page.settings.userAgent&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="p"&gt;(&lt;/span&gt;
+    &lt;span class="s2"&gt;&amp;quot;Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/53 &amp;quot;&lt;/span&gt;
+    &lt;span class="s2"&gt;&amp;quot;(KHTML, like Gecko) Chrome/15.0.87&amp;quot;&lt;/span&gt;
+&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;h3&gt;Readability&lt;/h3&gt;
+&lt;p&gt;If you look at the implicit way of writing statements then it is far more readable and less clutered. Though it might confuse the reader at first glance but in my opinion it looks&amp;nbsp;cleaner.&lt;/p&gt;
+&lt;h3&gt;&lt;span class="caps"&gt;PEP8&lt;/span&gt;&lt;/h3&gt;
+&lt;p&gt;According to the &lt;a href="https://www.python.org/dev/peps/pep-0008/#maximum-line-length"&gt;&lt;span class="caps"&gt;PEP8&lt;/span&gt; guidelines&lt;/a&gt;, the preferred way of wrapping long lines is through the implicit line joining using parentheses, square brackets or curly braces. So, here Implicit is better than Explicit but not in all the&amp;nbsp;cases.&lt;/p&gt;</summary><category term="python"></category><category term="line joining"></category><category term="pep8"></category></entry><entry><title>Creating virtual enviornment with python3</title><link href="https://gouravchawla.com/blog/2016/05/creating-virtual-enviornment-with-python3.html" rel="alternate"></link><published>2016-05-01T00:00:00+05:30</published><updated>2016-05-01T00:00:00+05:30</updated><author><name>Gourav Chawla</name></author><id>tag:gouravchawla.com,2016-05-01:blog/2016/05/creating-virtual-enviornment-with-python3.html</id><summary type="html">&lt;h3&gt;Prerequisites:&lt;/h3&gt;
+&lt;ul&gt;
+&lt;li&gt;bash/zsh (Default shell(terminals) on Ubuntu and &lt;span class="caps"&gt;MAC&lt;/span&gt; &lt;span class="caps"&gt;OSX&lt;/span&gt;)&lt;/li&gt;
+&lt;li&gt;Python&amp;nbsp;3.x&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;The python virtual enviornment is very useful when your work(or hobby) requires you to use multiple versions of python on the same machine. It gives you a clean slate in terms of packages and you have full control of what packages are installed in that&amp;nbsp;enviornment.&lt;/p&gt;
+&lt;p&gt;Below are the steps to install &lt;em&gt;virtualenv&lt;/em&gt; and create an enviornment with&amp;nbsp;python3.&lt;/p&gt;
+&lt;h3&gt;Install&amp;nbsp;virtualenv&lt;/h3&gt;
+&lt;p&gt;&lt;code&gt;$ sudo apt-get install python-virtualenv&lt;/code&gt;&lt;/p&gt;
+&lt;h3&gt;Create a new&amp;nbsp;virtualenv&lt;/h3&gt;
+&lt;p&gt;&lt;code&gt;$ virtualenv -p /usr/bin/python3 venv&lt;/code&gt;&lt;/p&gt;
+&lt;p&gt;In the above command, &lt;code&gt;venv&lt;/code&gt; is the name of virtual enviornment. To start virtual enviornment, do&amp;nbsp;this:&lt;/p&gt;
+&lt;h3&gt;Start&amp;nbsp;virtualenv&lt;/h3&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;$ &lt;span class="nb"&gt;cd&lt;/span&gt; venv
+$ &lt;span class="nb"&gt;source&lt;/span&gt; bin/activate
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;You can now do, &lt;code&gt;$ python --version&lt;/code&gt;, to check the version of python in your virtual&amp;nbsp;enviornment.&lt;/p&gt;
+&lt;h3&gt;Stop&amp;nbsp;virtualenv&lt;/h3&gt;
+&lt;p&gt;&lt;code&gt;$ deactivate&lt;/code&gt;&lt;/p&gt;</summary><category term="python"></category><category term="virtualenv"></category></entry></feed>

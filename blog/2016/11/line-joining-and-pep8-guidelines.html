@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+      <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta http-equiv="content-type" content="text/html; charset=utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1">
+    <link rel="shortcut icon" type="image/x-icon" href="favicon.ico" />
+
+    <title>Tech Deviant</title>
+
+    <meta charset="utf-8" />
+    <link href="https://gouravchawla.com/blog/feeds/all.atom.xml" type="application/atom+xml" rel="alternate" title="Tech Deviant Full Atom Feed" />
+    <link href="https://gouravchawla.com/blog/feeds/python.atom.xml" type="application/atom+xml" rel="alternate" title="Tech Deviant Categories Atom Feed" />
+    <link rel="stylesheet" href="https://gouravchawla.com/blog/theme/css/poole.css"/>
+    <link rel="stylesheet" href="https://gouravchawla.com/blog/theme/css/syntax.css"/>
+    <link rel="stylesheet" href="https://gouravchawla.com/blog/theme/css/lanyon.css"/>
+    <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=PT+Serif:400,400italic,700%7CPT+Sans:400">
+    <link rel="stylesheet" href="https://gouravchawla.com/blog/theme/css/styles.css"/>
+
+
+
+    <meta name="tags" contents="python" />
+    <meta name="tags" contents="line joining" />
+    <meta name="tags" contents="pep8" />
+
+  </head>
+
+  <body>
+<!-- Target for toggling the sidebar `.sidebar-checkbox` is for regular
+styles, `#sidebar-checkbox` for behavior. -->
+<input type="checkbox" class="sidebar-checkbox" id="sidebar-checkbox">
+<!-- Toggleable sidebar -->
+<div class="sidebar" id="sidebar">
+  <div class="sidebar-item">
+    <div class="profile">
+      <img src="https://gouravchawla.com/blog/theme/img/profile.png"/>
+    </div>
+  </div>
+
+  <nav class="sidebar-nav">
+  <!-- <a class="sidebar-nav-item" href="/">All</a> -->
+
+  <!--       <a class="sidebar-nav-item" href="https://gouravchawla.com/blog/category/conference-diaries.html">conference-diaries</a>
+      <a class="sidebar-nav-item" href="https://gouravchawla.com/blog/category/jaspersoft.html">jaspersoft</a>
+      <a class="sidebar-nav-item" href="https://gouravchawla.com/blog/category/python.html">python</a>
+ -->
+
+  <a class="sidebar-nav-item" href="/">Home</a>
+  <a class="sidebar-nav-item" href="/blog/about.html">About</a>
+  <a class="sidebar-nav-item" href="/blog/archives.html">Archives</a>
+  </nav>
+
+  <div class="sidebar-item">
+    <p>
+    <a href="https://twitter.com/techdeviant">@techdeviant</a>
+    </p>
+    <p class="tiny-note">
+      <a class="muted" href="https://gouravchawla.com/blog">&copy;  2016 Tech Deviant</a> | <a class="muted" href="https://github.com/thomaswilley/pelicanyan">Pelicanyan v0.1</a> | <a class="muted" href="https://getpelican.com/">Powered by Pelican</a>
+    </p>
+  </div>
+</div>    <div class="wrap">
+      <div class="masthead">
+        <div class="container">
+          <h3 class="masthead-title">
+            <a href="https://gouravchawla.com/blog/" title="Home">Tech Deviant</a>
+            <small>Navigating the 21st century - Tech, Culture and more</small>
+          </h3>
+        </div>
+      </div>
+
+      <div class="container content">
+<div class="posts">
+<div class="post">
+    <h1 class="post-title">
+      Line joining and pep8 guidelines for maximum line&nbsp;length
+    </h1>
+    <span class="post-date">November 05, 2016</span>
+
+    <p>The motivation behind writing this article came from a piece of code that I was working on earlier this week. It was a scrapper which uses a headless browser called, &#8220;PhantomJs&#8221;. I had to change the user agent in my <span class="caps">HTTP</span> requests and I found out an example to do just that. This is the&nbsp;example:</p>
+<div class="highlight"><pre><span></span><span class="n">dcap</span><span class="p">[</span><span class="s2">&quot;phantomjs.page.settings.userAgent&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span>
+    <span class="s2">&quot;Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/53 &quot;</span>
+    <span class="s2">&quot;(KHTML, like Gecko) Chrome/15.0.87&quot;</span>
+<span class="p">)</span>
+</pre></div>
+
+
+<p>When i first saw the above example, I thought it was a tuple being assigned to <code>dcap</code>. But when I took a closer look at it, I realized it was not the case. This is what I&nbsp;discovered:</p>
+<h3>Explicit vs Implicit line&nbsp;joining</h3>
+<p>In python, you can join two lines by ending that line with a, <code>\</code>. This is the <strong>explicit</strong> way of doing&nbsp;it.</p>
+<div class="highlight"><pre><span></span><span class="n">dcap</span><span class="p">[</span><span class="s2">&quot;phantomjs.page.settings.userAgent&quot;</span><span class="p">]</span> <span class="o">=</span><span class="s2">&quot;Mozilla/5.0 &quot;</span>\
+    <span class="s2">&quot;(X11; Linux x86_64) &quot;</span>\
+    <span class="s2">&quot;AppleWebKit/53 (KHTML, like Gecko) Chrome/15.0.87&quot;</span>
+</pre></div>
+
+
+<p>Now, if you want to do it <strong>implicitly</strong>, you&#8217;ll have to enclose the above string in parentheses, square brackets or curly&nbsp;braces:</p>
+<div class="highlight"><pre><span></span><span class="n">dcap</span><span class="p">[</span><span class="s2">&quot;phantomjs.page.settings.userAgent&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span>
+    <span class="s2">&quot;Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/53 &quot;</span>
+    <span class="s2">&quot;(KHTML, like Gecko) Chrome/15.0.87&quot;</span>
+<span class="p">)</span>
+</pre></div>
+
+
+<h3>Readability</h3>
+<p>If you look at the implicit way of writing statements then it is far more readable and less clutered. Though it might confuse the reader at first glance but in my opinion it looks&nbsp;cleaner.</p>
+<h3><span class="caps">PEP8</span></h3>
+<p>According to the <a href="https://www.python.org/dev/peps/pep-0008/#maximum-line-length"><span class="caps">PEP8</span> guidelines</a>, the preferred way of wrapping long lines is through the implicit line joining using parentheses, square brackets or curly braces. So, here Implicit is better than Explicit but not in all the&nbsp;cases.</p>
+  </div>
+</div>
+
+ <hr>
+
+        <div class="comments">
+            <h2>Comments !</h2>
+            <div id="disqus_thread"></div>
+            <script type="text/javascript">
+                var disqus_shortname = 'techdeviant';
+                var disqus_identifier = '2016/11/line-joining-and-pep8-guidelines.html';
+                var disqus_url = 'https://gouravchawla.com/blog/2016/11/line-joining-and-pep8-guidelines.html';
+                (function() {
+                    var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+                    dsq.src = '//techdeviant.disqus.com/embed.js';
+                    (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+                })();
+            </script>
+            <noscript>Please enable JavaScript to view the comments.</noscript>
+        </div>
+      </div>
+
+      <label for="sidebar-checkbox" class="sidebar-toggle"></label>
+      <hr>
+      <footer>
+        <div>
+          <ul class="list-inline text-center">
+                            <li>
+                                <a href="https://www.twitter.com/techdeviant">
+                                    <span class="fa-stack fa-lg">
+                                        <i class="fa fa-circle fa-stack-2x"></i>
+                                        <i class="fa fa-twitter fa-stack-1x fa-inverse"></i>
+                                    </span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="https://www.github.com/gouravchawla">
+                                    <span class="fa-stack fa-lg">
+                                        <i class="fa fa-circle fa-stack-2x"></i>
+                                        <i class="fa fa-github fa-stack-1x fa-inverse"></i>
+                                    </span>
+                                </a>
+                            </li>
+            </ul>
+            <p class="copyright text-center">
+      <a class="muted" href="https://gouravchawla.com/blog">&copy;  2017 Tech Deviant</a> | <a class="muted" href="https://github.com/thomaswilley/pelicanyan">Pelicanyan v0.1</a> | <a class="muted" href="https://getpelican.com/">Powered by Pelican</a>
+    </p>
+        </div>
+      </footer>
+
+      <script>
+        (function(document) {
+          var i = 0;
+          // snip empty header rows since markdown can't
+          var rows = document.querySelectorAll('tr');
+          for(i=0; i<rows.length; i++) {
+            var ths = rows[i].querySelectorAll('th');
+            var rowlen = rows[i].children.length;
+            if (ths.length > 0 && ths.length === rowlen) {
+              rows[i].remove();
+            }
+          }
+        })(document);
+      </script>
+
+      <script>
+        /* Lanyon & Poole are Copyright (c) 2014 Mark Otto. Adapted to Pelican 20141223 and extended a bit by @thomaswilley */
+        (function(document) {
+          var toggle = document.querySelector('.sidebar-toggle');
+          var sidebar = document.querySelector('#sidebar');
+          var checkbox = document.querySelector('#sidebar-checkbox');
+          document.addEventListener('click', function(e) {
+            var target = e.target;
+            if(!checkbox.checked ||
+            sidebar.contains(target) ||
+            (target === checkbox || target === toggle)) return;
+            checkbox.checked = false;
+            }, false);
+            })(document);
+      </script>
+      <script type="text/javascript">
+        var _gaq = _gaq || [];
+        _gaq.push(['_setAccount', 'UA-27793194-3']);
+        _gaq.push(['_trackPageview']);
+        (function() {
+         var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+         ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+         var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+         })();
+       </script>
+     </div>
+  </body>
+</html>

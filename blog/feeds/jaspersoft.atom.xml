@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom"><title>Tech Deviant</title><link href="https://gouravchawla.com/blog/" rel="alternate"></link><link href="https://gouravchawla.com/blog/feeds/jaspersoft.atom.xml" rel="self"></link><id>https://gouravchawla.com/blog/</id><updated>2017-04-15T00:00:00+05:30</updated><entry><title>How to configure email for Jaspersoft Server report scheduling feature</title><link href="https://gouravchawla.com/blog/2017/04/configure-email-for-jaspersoft-report-scheduling.html" rel="alternate"></link><published>2017-04-15T00:00:00+05:30</published><updated>2017-04-15T00:00:00+05:30</updated><author><name>Gourav Chawla</name></author><id>tag:gouravchawla.com,2017-04-15:blog/2017/04/configure-email-for-jaspersoft-report-scheduling.html</id><summary type="html">&lt;p&gt;Prerequisites:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;File system access where Jaspersoft Server is&amp;nbsp;installed&lt;/li&gt;
+&lt;li&gt;Appropriate rights to restart Jaspersoft&amp;nbsp;Server&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;Jaspersoft is a decent open source &lt;span class="caps"&gt;BI&lt;/span&gt; solution with a lot of good features. One of those features is the automatic report scheduling. But before you could use it in its full glory, you need to configure it to use your email server to send out the email notifications and reports as&amp;nbsp;attachment.&lt;/p&gt;
+&lt;p&gt;Even though the software allows you to do a lot of stuff but configuring email using the Jaspersoft server interface is not one of them. You would need file system access where Jaspersoft Server is installed to get it done. So, follow the steps below to get it&amp;nbsp;done.&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;Step 1:&lt;/strong&gt;Go to the directory where Jaspersoft Server is installed and then go to this&amp;nbsp;location:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;apache-tomcat/webapps/jasperserver/WEB-INF
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;For example: Complete location on my filesystem&amp;nbsp;is &lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;/software/jasper6.2.1/apache-tomcat/webapps/jasperserver/WEB-INF
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;&lt;img alt="Location of jaspersoft email configuration file" src="https://gouravchawla.com/blog/images/filesystem.png" /&gt;&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;Step 2:&lt;/strong&gt; Edit the file &lt;code&gt;js.quartz.properties&lt;/code&gt; and change the following lines at the end of the&amp;nbsp;file:&lt;/p&gt;
+&lt;p&gt;In jaspersoft you could send the generated report via email or send the link of the report on your server. This setting would be used for that&amp;nbsp;option.&lt;/p&gt;
+&lt;pre&gt;
+report.scheduler.web.deployment.uri=&lt;strong&gt;http://www.example.com:8182/jasperserver&lt;/strong&gt;
+&lt;/pre&gt;
+
+&lt;p&gt;Put your email server’s details in the following lines:
+&lt;pre&gt;
+report.scheduler.mail.sender.host=&lt;strong&gt;mail.example.com&lt;/strong&gt;
+report.scheduler.mail.sender.username=&lt;strong&gt;jasper@example.com&lt;/strong&gt;
+report.scheduler.mail.sender.password=&lt;strong&gt;examplePassword&lt;/strong&gt;
+report.scheduler.mail.sender.from=&lt;strong&gt;jasper@example.com&lt;/strong&gt;
+report.scheduler.mail.sender.protocol=&lt;strong&gt;smtp&lt;/strong&gt;
+report.scheduler.mail.sender.port=&lt;strong&gt;25&lt;/strong&gt;
+&lt;/pre&gt;&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;Step 3:&lt;/strong&gt; Save and restart the server
+&lt;code&gt;sh ctlscript.sh restart&lt;/code&gt;&lt;/p&gt;
+&lt;p&gt;The above steps should be enough to get it to work. You can create a sample schedule to check if the scheduling is working as expected and you are recieving the email&amp;nbsp;notifications.&lt;/p&gt;
+&lt;p&gt;I hope the above guide helped you. Leave any questions that you might have and I would be happy to answer&amp;nbsp;them.&lt;/p&gt;</summary><category term="jaspersoft"></category><category term="open source"></category></entry></feed>

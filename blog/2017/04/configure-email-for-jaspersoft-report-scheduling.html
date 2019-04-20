@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+      <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta http-equiv="content-type" content="text/html; charset=utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1">
+    <link rel="shortcut icon" type="image/x-icon" href="favicon.ico" />
+
+    <title>Tech Deviant</title>
+
+    <meta charset="utf-8" />
+    <link href="https://gouravchawla.com/blog/feeds/all.atom.xml" type="application/atom+xml" rel="alternate" title="Tech Deviant Full Atom Feed" />
+    <link href="https://gouravchawla.com/blog/feeds/jaspersoft.atom.xml" type="application/atom+xml" rel="alternate" title="Tech Deviant Categories Atom Feed" />
+    <link rel="stylesheet" href="https://gouravchawla.com/blog/theme/css/poole.css"/>
+    <link rel="stylesheet" href="https://gouravchawla.com/blog/theme/css/syntax.css"/>
+    <link rel="stylesheet" href="https://gouravchawla.com/blog/theme/css/lanyon.css"/>
+    <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=PT+Serif:400,400italic,700%7CPT+Sans:400">
+    <link rel="stylesheet" href="https://gouravchawla.com/blog/theme/css/styles.css"/>
+
+
+
+    <meta name="tags" contents="jaspersoft" />
+    <meta name="tags" contents="open source" />
+
+  </head>
+
+  <body>
+<!-- Target for toggling the sidebar `.sidebar-checkbox` is for regular
+styles, `#sidebar-checkbox` for behavior. -->
+<input type="checkbox" class="sidebar-checkbox" id="sidebar-checkbox">
+<!-- Toggleable sidebar -->
+<div class="sidebar" id="sidebar">
+  <div class="sidebar-item">
+    <div class="profile">
+      <img src="https://gouravchawla.com/blog/theme/img/profile.png"/>
+    </div>
+  </div>
+
+  <nav class="sidebar-nav">
+  <!-- <a class="sidebar-nav-item" href="/">All</a> -->
+
+  <!--       <a class="sidebar-nav-item" href="https://gouravchawla.com/blog/category/conference-diaries.html">conference-diaries</a>
+      <a class="sidebar-nav-item" href="https://gouravchawla.com/blog/category/jaspersoft.html">jaspersoft</a>
+      <a class="sidebar-nav-item" href="https://gouravchawla.com/blog/category/python.html">python</a>
+ -->
+
+  <a class="sidebar-nav-item" href="/">Home</a>
+  <a class="sidebar-nav-item" href="/blog/about.html">About</a>
+  <a class="sidebar-nav-item" href="/blog/archives.html">Archives</a>
+  </nav>
+
+  <div class="sidebar-item">
+    <p>
+    <a href="https://twitter.com/techdeviant">@techdeviant</a>
+    </p>
+    <p class="tiny-note">
+      <a class="muted" href="https://gouravchawla.com/blog">&copy;  2016 Tech Deviant</a> | <a class="muted" href="https://github.com/thomaswilley/pelicanyan">Pelicanyan v0.1</a> | <a class="muted" href="https://getpelican.com/">Powered by Pelican</a>
+    </p>
+  </div>
+</div>    <div class="wrap">
+      <div class="masthead">
+        <div class="container">
+          <h3 class="masthead-title">
+            <a href="https://gouravchawla.com/blog/" title="Home">Tech Deviant</a>
+            <small>Navigating the 21st century - Tech, Culture and more</small>
+          </h3>
+        </div>
+      </div>
+
+      <div class="container content">
+<div class="posts">
+<div class="post">
+    <h1 class="post-title">
+      How to configure email for Jaspersoft Server report scheduling&nbsp;feature
+    </h1>
+    <span class="post-date">April 15, 2017</span>
+
+    <p>Prerequisites:</p>
+<ul>
+<li>File system access where Jaspersoft Server is&nbsp;installed</li>
+<li>Appropriate rights to restart Jaspersoft&nbsp;Server</li>
+</ul>
+<p>Jaspersoft is a decent open source <span class="caps">BI</span> solution with a lot of good features. One of those features is the automatic report scheduling. But before you could use it in its full glory, you need to configure it to use your email server to send out the email notifications and reports as&nbsp;attachment.</p>
+<p>Even though the software allows you to do a lot of stuff but configuring email using the Jaspersoft server interface is not one of them. You would need file system access where Jaspersoft Server is installed to get it done. So, follow the steps below to get it&nbsp;done.</p>
+<p><strong>Step 1:</strong>Go to the directory where Jaspersoft Server is installed and then go to this&nbsp;location:</p>
+<div class="highlight"><pre><span></span>apache-tomcat/webapps/jasperserver/WEB-INF
+</pre></div>
+
+
+<p>For example: Complete location on my filesystem&nbsp;is </p>
+<div class="highlight"><pre><span></span>/software/jasper6.2.1/apache-tomcat/webapps/jasperserver/WEB-INF
+</pre></div>
+
+
+<p><img alt="Location of jaspersoft email configuration file" src="https://gouravchawla.com/blog/images/filesystem.png" /></p>
+<p><strong>Step 2:</strong> Edit the file <code>js.quartz.properties</code> and change the following lines at the end of the&nbsp;file:</p>
+<p>In jaspersoft you could send the generated report via email or send the link of the report on your server. This setting would be used for that&nbsp;option.</p>
+<pre>
+report.scheduler.web.deployment.uri=<strong>http://www.example.com:8182/jasperserver</strong>
+</pre>
+
+<p>Put your email server’s details in the following lines:
+<pre>
+report.scheduler.mail.sender.host=<strong>mail.example.com</strong>
+report.scheduler.mail.sender.username=<strong>jasper@example.com</strong>
+report.scheduler.mail.sender.password=<strong>examplePassword</strong>
+report.scheduler.mail.sender.from=<strong>jasper@example.com</strong>
+report.scheduler.mail.sender.protocol=<strong>smtp</strong>
+report.scheduler.mail.sender.port=<strong>25</strong>
+</pre></p>
+<p><strong>Step 3:</strong> Save and restart the server
+<code>sh ctlscript.sh restart</code></p>
+<p>The above steps should be enough to get it to work. You can create a sample schedule to check if the scheduling is working as expected and you are recieving the email&nbsp;notifications.</p>
+<p>I hope the above guide helped you. Leave any questions that you might have and I would be happy to answer&nbsp;them.</p>
+  </div>
+</div>
+
+ <hr>
+
+        <div class="comments">
+            <h2>Comments !</h2>
+            <div id="disqus_thread"></div>
+            <script type="text/javascript">
+                var disqus_shortname = 'techdeviant';
+                var disqus_identifier = '2017/04/configure-email-for-jaspersoft-report-scheduling.html';
+                var disqus_url = 'https://gouravchawla.com/blog/2017/04/configure-email-for-jaspersoft-report-scheduling.html';
+                (function() {
+                    var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+                    dsq.src = '//techdeviant.disqus.com/embed.js';
+                    (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+                })();
+            </script>
+            <noscript>Please enable JavaScript to view the comments.</noscript>
+        </div>
+      </div>
+
+      <label for="sidebar-checkbox" class="sidebar-toggle"></label>
+      <hr>
+      <footer>
+        <div>
+          <ul class="list-inline text-center">
+                            <li>
+                                <a href="https://www.twitter.com/techdeviant">
+                                    <span class="fa-stack fa-lg">
+                                        <i class="fa fa-circle fa-stack-2x"></i>
+                                        <i class="fa fa-twitter fa-stack-1x fa-inverse"></i>
+                                    </span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="https://www.github.com/gouravchawla">
+                                    <span class="fa-stack fa-lg">
+                                        <i class="fa fa-circle fa-stack-2x"></i>
+                                        <i class="fa fa-github fa-stack-1x fa-inverse"></i>
+                                    </span>
+                                </a>
+                            </li>
+            </ul>
+            <p class="copyright text-center">
+      <a class="muted" href="https://gouravchawla.com/blog">&copy;  2017 Tech Deviant</a> | <a class="muted" href="https://github.com/thomaswilley/pelicanyan">Pelicanyan v0.1</a> | <a class="muted" href="https://getpelican.com/">Powered by Pelican</a>
+    </p>
+        </div>
+      </footer>
+
+      <script>
+        (function(document) {
+          var i = 0;
+          // snip empty header rows since markdown can't
+          var rows = document.querySelectorAll('tr');
+          for(i=0; i<rows.length; i++) {
+            var ths = rows[i].querySelectorAll('th');
+            var rowlen = rows[i].children.length;
+            if (ths.length > 0 && ths.length === rowlen) {
+              rows[i].remove();
+            }
+          }
+        })(document);
+      </script>
+
+      <script>
+        /* Lanyon & Poole are Copyright (c) 2014 Mark Otto. Adapted to Pelican 20141223 and extended a bit by @thomaswilley */
+        (function(document) {
+          var toggle = document.querySelector('.sidebar-toggle');
+          var sidebar = document.querySelector('#sidebar');
+          var checkbox = document.querySelector('#sidebar-checkbox');
+          document.addEventListener('click', function(e) {
+            var target = e.target;
+            if(!checkbox.checked ||
+            sidebar.contains(target) ||
+            (target === checkbox || target === toggle)) return;
+            checkbox.checked = false;
+            }, false);
+            })(document);
+      </script>
+      <script type="text/javascript">
+        var _gaq = _gaq || [];
+        _gaq.push(['_setAccount', 'UA-27793194-3']);
+        _gaq.push(['_trackPageview']);
+        (function() {
+         var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+         ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+         var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+         })();
+       </script>
+     </div>
+  </body>
+</html>
